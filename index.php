@@ -1,8 +1,4 @@
-<html>
-<head>
+<?php get_header(); ?>
 
-</head>
-<body>
-	<h1>Branchenverzeichnis</h1>
-</body>
-</html>
+<?php get_sidebar(); ?>
+<?php get_footer(); ?>
