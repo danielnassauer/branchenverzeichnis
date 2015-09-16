@@ -1,11 +1,7 @@
 <?php
 
-if (isset($_GET['activated']) && is_admin()) {
-
-    $new_page_title = 'Unternehmer Login';
+function add_page($new_page_title, $new_page_template) {
     $new_page_content = '';
-    $new_page_template = 'company_login_tmpl.php';
-
     $page_check = get_page_by_title($new_page_title);
     $new_page = array(
         'post_type' => 'page',
@@ -22,4 +18,8 @@ if (isset($_GET['activated']) && is_admin()) {
     }
 }
 
+if (isset($_GET['activated']) && is_admin()) {
+    add_page('Unternehmer Login', 'company_login_tmpl.php');
+    add_page('Unternehmer Backend', 'company_backend_tmpl.php');
+}
 ?>
