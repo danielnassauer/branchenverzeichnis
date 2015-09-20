@@ -11,7 +11,7 @@
         <div class="col-md-10">
             <h2>FIRMEN</h2>
             <?php
-            $type = 'companies';
+            $type = 'company';
             $args = array(
                 'post_type' => $type,
                 'post_status' => 'publish',
@@ -24,6 +24,7 @@
                 while ($my_query->have_posts()) : $my_query->the_post();
                     ?>
                     <p><a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a></p>
+                    <hr>
                     <?php
                 endwhile;
             }
