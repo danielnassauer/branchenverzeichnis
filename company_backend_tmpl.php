@@ -33,7 +33,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     $authUrl = $client->createAuthUrl();
 }
 
-function add_post($title, $plz, $city, $street, $housenr) {
+function add_post($title, $plz, $city, $street, $housenr, $longitude, $latitude) {
     $post_id = wp_insert_post(array(
         'post_type' => 'company',
         'post_title' => $title,
@@ -43,6 +43,8 @@ function add_post($title, $plz, $city, $street, $housenr) {
     add_post_meta($post_id, 'bd_city', $city);
     add_post_meta($post_id, 'bd_street', $street);
     add_post_meta($post_id, 'bd_housenr', $housenr);
+    add_post_meta($post_id, 'bd_longitude', $longitude);
+    add_post_meta($post_id, 'bd_latitude', $latitude);
 }
 
 if (isset($_POST['bd_company_title'])) {
@@ -51,7 +53,9 @@ if (isset($_POST['bd_company_title'])) {
     $city = $_POST['bd_city'];
     $street = $_POST['bd_street'];
     $housenr = $_POST['bd_housenr'];
-    add_post($title, $plz, $city, $street, $housenr);
+    $longitude = $_POST['bd_longitude'];
+    $latitude = $_POST['bd_latitude'];
+    add_post($title, $plz, $city, $street, $housenr, $longitude, $latitude);
 }
 ?>
 
@@ -93,6 +97,18 @@ if (isset($_POST['bd_company_title'])) {
                     <label for="inputHouseNr" class="col-sm-2 control-label">Hausnummer</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="inputHouseNr" placeholder="Hausnummer" name="bd_housenr">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputLongitude" class="col-sm-2 control-label">Längengrad</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="inputLongitude" placeholder="Längengrad" name="bd_longitude">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputLatitude" class="col-sm-2 control-label">Breitengrad</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="inputLatitude" placeholder="Breitengrad" name="bd_latitude">
                     </div>
                 </div>
                 <div class="form-group">

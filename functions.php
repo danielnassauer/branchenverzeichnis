@@ -23,6 +23,8 @@ function add_metaboxes() {
     add_meta_box('bd_city', 'Ort', 'bd_city_html', 'company', 'normal', 'default');
     add_meta_box('bd_street', 'Strasse', 'bd_street_html', 'company', 'normal', 'default');
     add_meta_box('bd_housenr', 'Hausnummer', 'bd_housenr_html', 'company', 'normal', 'default');
+    add_meta_box('bd_longitude', 'Längengrad', 'bd_longitude_html', 'company', 'normal', 'default');
+    add_meta_box('bd_latitude', 'Breitengrad', 'bd_latitude_html', 'company', 'normal', 'default');
 }
 
 function bd_save_meta($post_id, $post) {
@@ -37,6 +39,8 @@ function bd_save_meta($post_id, $post) {
     $events_meta['bd_city'] = $_POST['bd_city'];
     $events_meta['bd_street'] = $_POST['bd_street'];
     $events_meta['bd_housenr'] = $_POST['bd_housenr'];
+    $events_meta['bd_longitude'] = $_POST['bd_longitude'];
+    $events_meta['bd_latitude'] = $_POST['bd_latitude'];
 
     foreach ($events_meta as $key => $value) {
         if ($post->post_type == 'revision')
@@ -73,6 +77,14 @@ function bd_street_html() {
 
 function bd_housenr_html() {
     bd_input_html('bd_housenr');
+}
+
+function bd_longitude_html() {
+    bd_input_html('bd_longitude');
+}
+
+function bd_latitude_html() {
+    bd_input_html('bd_latitude');
 }
 
 function add_page($new_page_title, $new_page_template) {
