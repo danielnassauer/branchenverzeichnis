@@ -32,15 +32,13 @@
 
         <div class="col-md-10">
             <div id="googleMap" class="map-top"></div>
-            <h2>FIRMA</h2>
+            <h2><?php the_title() ?></h2>
             <p>
-                PLZ: <?php echo get_post_meta($post->ID, 'bd_plz', FALSE)[0]; ?>
+                <?php echo get_post_meta($post->ID, 'bd_street', FALSE)[0] ?>
+                <?php echo get_post_meta($post->ID, 'bd_housenr', FALSE)[0] ?>
                 <br>
-                Ort: <?php echo get_post_meta($post->ID, 'bd_city', FALSE)[0]; ?>
-                <br>
-                Straße: <?php echo get_post_meta($post->ID, 'bd_street', FALSE)[0]; ?>
-                <br>
-                Hausnummer: <?php echo get_post_meta($post->ID, 'bd_housenr', FALSE)[0]; ?>
+                <?php echo get_post_meta($post->ID, 'bd_plz', FALSE)[0] ?>
+                <?php echo get_post_meta($post->ID, 'bd_city', FALSE)[0] ?>
             </p>
         </div>
     </div>
