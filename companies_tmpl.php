@@ -2,97 +2,114 @@
 /**
  * Template Name: Companies
  * */
+require_once 'geo.php';
 
 /**
  * 
  * @return type
  */
-function search_companies() {
-    if (!isset($_POST['latitude']))
-        return;
-    $lat = $_POST['latitude'];
-    $long = $_POST['longitude'];
-    echo "Ergebnise für " . $lat . " " . $long;
+function get_distance() {
+    global $post;
+    $lat_origin = $_POST['latitude'];
+    $long_origin = $_POST['longitude'];
+    $lat_company = get_post_meta($post->ID, 'bd_latitude', FALSE)[0];
+    $long_company = get_post_meta($post->ID, 'bd_longitude', FALSE)[0];
+    return get_geo_distance($lat_origin, $long_origin, $lat_company, $long_company);
+}
+
+function print_company_entry($distance = null) {
+    global $post;
+    echo '<tr><td>';
+    echo '<h4><a href="' . get_the_permalink($post->ID) . '">' . get_the_title($post->ID) . '</a></h4><small>';
+    if ($distance != null) {
+        echo "<b>" . $distance . "km</b><br>";
+    }
+    echo get_post_meta($post->ID, 'bd_street', FALSE)[0];
+    echo get_post_meta($post->ID, 'bd_housenr', FALSE)[0];
+    echo '<br>';
+    echo get_post_meta($post->ID, 'bd_plz', FALSE)[0];
+    echo get_post_meta($post->ID, 'bd_city', FALSE)[0];
+    echo '</small></td></tr>';
 }
 ?>
 
 <?php get_header(); ?>
-<div class="container-fluid">
+<div class="container-fluid sidenav-container">    
     <div class="row">
-        <?php get_sidebar(); ?>        
-        <div class="col-md-10">            
+        <?php get_sidebar(); ?>      
+
+        <div class="col-md-10 background map-container">
             <div id="map" class="map-top"></div>
+        </div>
+
+        <div class="col-md-10 col-md-offset-2 background content">                        
 
             <!-- SUCHFORMULAR -->
-            <div class="panel panel-default search-box">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Suche</h3>
-                </div>                
-                <div class="panel-body">     
-                    <div class="form-horizontal">
-                        <div class="form-group">
-                            <label for="address" class="col-sm-2 control-label">Ort</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="address" placeholder="z.B. Berlin oder Berlin, Potsdamer Straße 1">
-                                <button class="btn btn-default" id="submit" value="Geocode">ausw&auml;hlen</button>
-                            </div>                            
-                        </div>  
-                    </div>
-                    <form action="<?php the_permalink(); ?>" method="post" class="form-horizontal">                                              
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <button class="btn btn-primary" type="submit">Suchen</button>
-                            </div>
-                        </div>
-                        <input type="hidden" id="latitude" name="latitude">
-                        <input type="hidden" id="longitude" name="longitude">
-                    </form>
+            <div class="well">                
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="address" class="col-sm-2 control-label">Ort</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="address" placeholder="z.B. Berlin oder Berlin, Potsdamer Straße 1">
+                            <button class="btn btn-default" id="submit" value="Geocode">ausw&auml;hlen</button>
+                        </div>                            
+                    </div>  
                 </div>
+                <form action="<?php the_permalink(); ?>" method="post" class="form-horizontal"> 
+                    <div class="form-group">
+                        <label for="radius" class="col-sm-2 control-label">Umkreis</label>
+                        <div class="col-sm-10">                                
+                            <input type="text" class="form-control" id="radius" name="radius">
+                        </div>                            
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button class="btn btn-primary" type="submit">Suchen</button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="latitude" name="latitude">
+                    <input type="hidden" id="longitude" name="longitude">
+                </form>
             </div>
 
             <!-- ERGEBNISSE -->
-            <div class="panel panel-default search-box">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Ergebnisse</h3>
-                </div>                
-                <div class="panel-body">
-                    <?php search_companies() ?>
-                    <table class="table table-hover table-striped">
-                        <?php
-                        $type = 'company';
-                        $args = array(
-                            'post_type' => $type,
-                            'post_status' => 'publish',
-                            'posts_per_page' => -1,
-                            'caller_get_posts' => 1);
+            <h3>Ergebnisse</h3>
 
-                        $my_query = null;
-                        $my_query = new WP_Query($args);
-                        if ($my_query->have_posts()) {
-                            while ($my_query->have_posts()) : $my_query->the_post();
-                                ?>
-                                <tr>
-                                    <td>
-                                        <h3>
-                                            <a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a>
-                                        </h3>
-                                        <p>
-                                            <?php echo get_post_meta($post->ID, 'bd_street', FALSE)[0] ?>
-                                            <?php echo get_post_meta($post->ID, 'bd_housenr', FALSE)[0] ?>
-                                            <br>
-                                            <?php echo get_post_meta($post->ID, 'bd_plz', FALSE)[0] ?>
-                                            <?php echo get_post_meta($post->ID, 'bd_city', FALSE)[0] ?>
-                                        </p>
-                                    </td>
-                                </tr>
-                                <?php
-                            endwhile;
-                        }
-                        wp_reset_query();
+
+            <table class="table table-hover table-striped">
+                <?php
+                $type = 'company';
+                $args = array(
+                    'post_type' => $type,
+                    'post_status' => 'publish',
+                    'posts_per_page' => -1,
+                    'caller_get_posts' => 1);
+
+                $my_query = null;
+                $my_query = new WP_Query($args);
+                if ($my_query->have_posts()) {
+                    while ($my_query->have_posts()) : $my_query->the_post();
                         ?>
-                    </table>
-                </div>
-            </div>
+
+                        <?php
+                        if (isset($_POST['latitude'])) {
+                            $dist = get_distance();
+                            $radius = floatval($_POST["radius"]);
+                            if ($dist <= $radius) {
+                                print_company_entry($dist);
+                            }
+                        } else {
+                            print_company_entry();
+                        }
+                        ?>
+
+
+                        <?php
+                    endwhile;
+                }
+                wp_reset_query();
+                ?>
+            </table>            
 
         </div>
     </div>
