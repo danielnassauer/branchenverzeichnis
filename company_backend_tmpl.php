@@ -33,12 +33,15 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     $authUrl = $client->createAuthUrl();
 }
 
-function add_post($title, $plz, $city, $street, $housenr, $telephone, $email, $website, $longitude, $latitude) {
+function add_post($title, $type, $plz, $city, $street, $housenr, $telephone, $email, $website, $longitude, $latitude) {
+    echo "GEWERBE: " . $type;
+    // neuen Post erzeugen
     $post_id = wp_insert_post(array(
         'post_type' => 'company',
         'post_title' => $title,
         'post_status' => 'publish'
     ));
+    // Coustom-Fields setzen
     add_post_meta($post_id, 'bd_plz', $plz);
     add_post_meta($post_id, 'bd_city', $city);
     add_post_meta($post_id, 'bd_street', $street);
@@ -48,10 +51,13 @@ function add_post($title, $plz, $city, $street, $housenr, $telephone, $email, $w
     add_post_meta($post_id, 'bd_website', $website);
     add_post_meta($post_id, 'bd_longitude', $longitude);
     add_post_meta($post_id, 'bd_latitude', $latitude);
+    // Tags (Gewerbe) hinzufügen
+    wp_set_object_terms($post_id, explode(",", $type), 'type');
 }
 
 if (isset($_POST['bd_company_title'])) {
     $title = $_POST['bd_company_title'];
+    $type = $_POST['tag_type'];
     $plz = $_POST['bd_plz'];
     $city = $_POST['bd_city'];
     $street = $_POST['bd_street'];
@@ -61,7 +67,7 @@ if (isset($_POST['bd_company_title'])) {
     $website = $_POST['bd_website'];
     $longitude = $_POST['bd_longitude'];
     $latitude = $_POST['bd_latitude'];
-    add_post($title, $plz, $city, $street, $housenr, $telephone, $email, $website, $longitude, $latitude);
+    add_post($title, $type, $plz, $city, $street, $housenr, $telephone, $email, $website, $longitude, $latitude);
 }
 ?>
 
@@ -74,7 +80,35 @@ if (isset($_POST['bd_company_title'])) {
             Angemeldet als: <?php echo $user['displayName'] ?><br>
             ID: <?php echo $user['id'] ?>
 
-            <form action="<?php the_permalink(); ?>" method="post" class="form-horizontal">
+            <form action="<?php the_permalink(); ?>" method="post" class="form-horizontal">                
+
+                <!-- Gewerbe -->
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Gewerbe</label>
+                    <table>
+                        <tr>
+                            <td>
+                                <select id="selectType">
+                                    <?php
+                                    $tags = get_terms('type', 'hide_empty=0');
+                                    foreach ($tags as $tag) {
+                                        echo '<option value="' . $tag->slug . '">' . $tag->name . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </td>
+                            <td>
+                                <a class="btn btn-default" role="button" onClick="addType()"><i class="icon ion-plus"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text" class="form-control" id="inputTypes" name="tag_type" readonly>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
                 <div class="form-group">
                     <label for="inputCompany" class="col-sm-2 control-label">Firma</label>
                     <div class="col-sm-10">
@@ -144,5 +178,19 @@ if (isset($_POST['bd_company_title'])) {
         </div>
     </div>
 </div>
+
+
+<script type="text/javascript">
+// Hinzufügen von Gewerbe-Tags
+
+    function addType() {
+        var type = $("#selectType").val();
+        var types_input = $("#inputTypes");
+        if (types_input.val() == "")
+            types_input.val(type);
+        else
+            types_input.val(types_input.val() + "," + type);
+    }
+</script>
 
 <?php get_footer(); ?>

@@ -1,4 +1,5 @@
 <?php
+define('WP_DEBUG', true);
 
 function add_post_types() {
     register_post_type(
@@ -129,10 +130,30 @@ if (isset($_GET['activated']) && is_admin()) {
     add_page('Unternehmer Backend', 'company_backend_tmpl.php');
     add_page('Firmen', 'companies_tmpl.php');
 }
-
 add_action('init', 'add_post_types');
 add_action('save_post', 'bd_save_meta', 1, 2);
 
+////////////////////////////////////////////////////////////////////////////////
+// TAXONOMIES, TERMS
+////////////////////////////////////////////////////////////////////////////////
+
+function create_taxonomies() {
+    $types = array('Arzt', 'Friseur', 'Restaurant', 'Supermarkt');
+
+    register_taxonomy(
+            'type', 'company', array(
+        'label' => 'Gewerbe',
+        'hierarchical' => false,
+            )
+    );
+    foreach ($types as $type) {
+        wp_insert_term($type, 'type');
+    }
+}
+
+add_action('init', 'create_taxonomies');
+
+////////////////////////////////////////////////////////////////////////////////
 //TODO nur zum testen
 flush_rewrite_rules();
 ?>

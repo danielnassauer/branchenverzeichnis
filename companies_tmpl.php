@@ -19,24 +19,36 @@ function get_distance() {
 
 function print_company_entry($distance = null) {
     global $post;
+
+    // Überschrift
     echo '<tr><td>';
     echo '<h4><a href="' . get_the_permalink($post->ID) . '">' . get_the_title($post->ID) . '</a></h4><small>';
     if ($distance != null) {
         echo "<b>" . $distance . "km</b><br>";
     }
 
+    // Gewerbe
+    foreach (wp_get_post_terms($post->ID, 'type') as $tag) {
+        echo '<span class="label label-default">' . $tag->name . '</span>&nbsp;';
+    }
+    echo '<br><br>';
+
+    // Adresse
     echo '<table class="company-entry"><tr><td><i class="icon ion-location"></i></td><td><small>';
     echo get_post_meta($post->ID, 'bd_street', FALSE)[0] . " ";
     echo get_post_meta($post->ID, 'bd_housenr', FALSE)[0] . "<br>";
     echo get_post_meta($post->ID, 'bd_plz', FALSE)[0] . " ";
     echo get_post_meta($post->ID, 'bd_city', FALSE)[0] . "</small></td></tr>";
 
+    // Telefonnummer
     echo '<tr><td><i class="icon ion-ios-telephone"></i></td><td><small>';
     echo get_post_meta($post->ID, 'bd_telephone', FALSE)[0] . "</small></td></tr>";
 
+    // EMail
     echo '<tr><td><i class="icon ion-email"></i></td><td><small>';
     echo '<a href="mailto:' . get_post_meta($post->ID, 'bd_email', FALSE)[0] . '">' . get_post_meta($post->ID, 'bd_email', FALSE)[0] . '</a></small></td></tr>';
 
+    // Website
     echo '<tr><td><i class="icon ion-earth"></i></td><td><small>';
     echo '<a href="' . get_post_meta($post->ID, 'bd_website', FALSE)[0] . '">' . get_post_meta($post->ID, 'bd_website', FALSE)[0] . '</a></small></td></tr></table>';
 }
