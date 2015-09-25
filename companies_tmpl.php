@@ -24,12 +24,21 @@ function print_company_entry($distance = null) {
     if ($distance != null) {
         echo "<b>" . $distance . "km</b><br>";
     }
-    echo get_post_meta($post->ID, 'bd_street', FALSE)[0];
-    echo get_post_meta($post->ID, 'bd_housenr', FALSE)[0];
-    echo '<br>';
-    echo get_post_meta($post->ID, 'bd_plz', FALSE)[0];
-    echo get_post_meta($post->ID, 'bd_city', FALSE)[0];
-    echo '</small></td></tr>';
+
+    echo '<table class="company-entry"><tr><td><i class="icon ion-location"></i></td><td><small>';
+    echo get_post_meta($post->ID, 'bd_street', FALSE)[0] . " ";
+    echo get_post_meta($post->ID, 'bd_housenr', FALSE)[0] . "<br>";
+    echo get_post_meta($post->ID, 'bd_plz', FALSE)[0] . " ";
+    echo get_post_meta($post->ID, 'bd_city', FALSE)[0] . "</small></td></tr>";
+
+    echo '<tr><td><i class="icon ion-ios-telephone"></i></td><td><small>';
+    echo get_post_meta($post->ID, 'bd_telephone', FALSE)[0] . "</small></td></tr>";
+
+    echo '<tr><td><i class="icon ion-email"></i></td><td><small>';
+    echo '<a href="mailto:' . get_post_meta($post->ID, 'bd_email', FALSE)[0] . '">' . get_post_meta($post->ID, 'bd_email', FALSE)[0] . '</a></small></td></tr>';
+
+    echo '<tr><td><i class="icon ion-earth"></i></td><td><small>';
+    echo '<a href="' . get_post_meta($post->ID, 'bd_website', FALSE)[0] . '">' . get_post_meta($post->ID, 'bd_website', FALSE)[0] . '</a></small></td></tr></table>';
 }
 ?>
 

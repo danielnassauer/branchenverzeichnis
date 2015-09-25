@@ -23,6 +23,10 @@ function add_metaboxes() {
     add_meta_box('bd_city', 'Ort', 'bd_city_html', 'company', 'normal', 'default');
     add_meta_box('bd_street', 'Strasse', 'bd_street_html', 'company', 'normal', 'default');
     add_meta_box('bd_housenr', 'Hausnummer', 'bd_housenr_html', 'company', 'normal', 'default');
+    add_meta_box('bd_telephone', 'Telefonnummer.', 'bd_telephone_html', 'company', 'normal', 'default');
+    add_meta_box('bd_email', 'EMail', 'bd_email_html', 'company', 'normal', 'default');
+    add_meta_box('bd_website', 'Web-Seite', 'bd_website_html', 'company', 'normal', 'default');
+    add_meta_box('bd_housenr', 'Hausnummer', 'bd_housenr_html', 'company', 'normal', 'default');
     add_meta_box('bd_longitude', 'Längengrad', 'bd_longitude_html', 'company', 'normal', 'default');
     add_meta_box('bd_latitude', 'Breitengrad', 'bd_latitude_html', 'company', 'normal', 'default');
 }
@@ -39,6 +43,9 @@ function bd_save_meta($post_id, $post) {
     $events_meta['bd_city'] = $_POST['bd_city'];
     $events_meta['bd_street'] = $_POST['bd_street'];
     $events_meta['bd_housenr'] = $_POST['bd_housenr'];
+    $events_meta['bd_telephone'] = $_POST['bd_telephone'];
+    $events_meta['bd_email'] = $_POST['bd_email'];
+    $events_meta['bd_website'] = $_POST['bd_website'];
     $events_meta['bd_longitude'] = $_POST['bd_longitude'];
     $events_meta['bd_latitude'] = $_POST['bd_latitude'];
 
@@ -85,6 +92,18 @@ function bd_longitude_html() {
 
 function bd_latitude_html() {
     bd_input_html('bd_latitude');
+}
+
+function bd_telephone_html() {
+    bd_input_html('bd_telephone');
+}
+
+function bd_email_html() {
+    bd_input_html('bd_email');
+}
+
+function bd_website_html() {
+    bd_input_html('bd_website');
 }
 
 function add_page($new_page_title, $new_page_template) {

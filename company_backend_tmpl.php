@@ -33,7 +33,7 @@ if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
     $authUrl = $client->createAuthUrl();
 }
 
-function add_post($title, $plz, $city, $street, $housenr, $longitude, $latitude) {
+function add_post($title, $plz, $city, $street, $housenr, $telephone, $email, $website, $longitude, $latitude) {
     $post_id = wp_insert_post(array(
         'post_type' => 'company',
         'post_title' => $title,
@@ -43,6 +43,9 @@ function add_post($title, $plz, $city, $street, $housenr, $longitude, $latitude)
     add_post_meta($post_id, 'bd_city', $city);
     add_post_meta($post_id, 'bd_street', $street);
     add_post_meta($post_id, 'bd_housenr', $housenr);
+    add_post_meta($post_id, 'bd_telephone', $telephone);
+    add_post_meta($post_id, 'bd_email', $email);
+    add_post_meta($post_id, 'bd_website', $website);
     add_post_meta($post_id, 'bd_longitude', $longitude);
     add_post_meta($post_id, 'bd_latitude', $latitude);
 }
@@ -53,9 +56,12 @@ if (isset($_POST['bd_company_title'])) {
     $city = $_POST['bd_city'];
     $street = $_POST['bd_street'];
     $housenr = $_POST['bd_housenr'];
+    $telephone = $_POST['bd_telephone'];
+    $email = $_POST['bd_email'];
+    $website = $_POST['bd_website'];
     $longitude = $_POST['bd_longitude'];
     $latitude = $_POST['bd_latitude'];
-    add_post($title, $plz, $city, $street, $housenr, $longitude, $latitude);
+    add_post($title, $plz, $city, $street, $housenr, $telephone, $email, $website, $longitude, $latitude);
 }
 ?>
 
@@ -97,6 +103,24 @@ if (isset($_POST['bd_company_title'])) {
                     <label for="inputHouseNr" class="col-sm-2 control-label">Hausnummer</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="inputHouseNr" placeholder="Hausnummer" name="bd_housenr">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputTelephone" class="col-sm-2 control-label">Telefonnummer</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="inputTelephone" placeholder="Telefonnummer" name="bd_telephone">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEMail" class="col-sm-2 control-label">EMail</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="inputEMail" placeholder="EMail-Adresse" name="bd_email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputWebsite" class="col-sm-2 control-label">Web-Seite</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="inputWebsite" placeholder="Web-Seite" name="bd_website">
                     </div>
                 </div>
                 <div class="form-group">

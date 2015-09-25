@@ -40,3 +40,12 @@ Author URI:
 .content{
     border-left: 1px #bbb solid;
 }
+
+table.company-entry td{
+    padding-right: 10px;
+    padding-top:5px;    
+}
+
+table.company-entry tr:first-child td {
+    padding-bottom:10px;
+}
