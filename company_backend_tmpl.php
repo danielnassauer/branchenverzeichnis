@@ -41,7 +41,7 @@ function add_post($title, $type, $plz, $city, $street, $housenr, $telephone, $em
         'post_title' => $title,
         'post_status' => 'publish'
     ));
-    // Coustom-Fields setzen
+    // Custom-Fields setzen
     add_post_meta($post_id, 'bd_plz', $plz);
     add_post_meta($post_id, 'bd_city', $city);
     add_post_meta($post_id, 'bd_street', $street);

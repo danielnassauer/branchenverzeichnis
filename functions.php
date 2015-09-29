@@ -1,4 +1,5 @@
 <?php
+
 define('WP_DEBUG', true);
 
 function add_post_types() {
@@ -140,11 +141,9 @@ add_action('save_post', 'bd_save_meta', 1, 2);
 function create_taxonomies() {
     $types = array('Arzt', 'Friseur', 'Restaurant', 'Supermarkt');
 
-    register_taxonomy(
-            'type', 'company', array(
+    register_taxonomy('type', 'company', array(
         'label' => 'Gewerbe',
-        'hierarchical' => false,
-            )
+        'hierarchical' => false)
     );
     foreach ($types as $type) {
         wp_insert_term($type, 'type');

@@ -76,13 +76,26 @@ function print_company_entry($distance = null) {
                         </div>                            
                     </div>  
                 </div>
-                <form action="<?php the_permalink(); ?>" method="post" class="form-horizontal"> 
+                <form action="<?php the_permalink(); ?>" method="post" class="form-horizontal">
+                    <div class="form-group">
+                        <label for="radius" class="col-sm-2 control-label">Gewerbe</label>
+                        <div class="col-sm-10"> 
+                            <select id="selectType" name="tag_type">
+                                <?php
+                                $tags = get_terms('type', 'hide_empty=0');
+                                foreach ($tags as $tag) {
+                                    echo '<option value="' . $tag->slug . '">' . $tag->name . '</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label for="radius" class="col-sm-2 control-label">Umkreis</label>
                         <div class="col-sm-10">                                
                             <input type="text" class="form-control" id="radius" name="radius">
                         </div>                            
-                    </div>
+                    </div>                    
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             <button class="btn btn-primary" type="submit">Suchen</button>
@@ -105,8 +118,10 @@ function print_company_entry($distance = null) {
                     'post_status' => 'publish',
                     'posts_per_page' => -1,
                     'caller_get_posts' => 1);
+                if (isset($_POST["tag_type"])) {
+                    $args["type"] = $_POST["tag_type"];
+                }
 
-                $my_query = null;
                 $my_query = new WP_Query($args);
                 if ($my_query->have_posts()) {
                     while ($my_query->have_posts()) : $my_query->the_post();
