@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 define('GOOGLE_CLIENT_ID', '1042880545551-5qeha6pmrq4r72a48p5f7r0bsqqdm1o5.apps.googleusercontent.com');
 define('GOOGLE_CLIENT_SECRET', 'rz8u-mFkRkeBTOzOC4ZqqC2N');
@@ -79,7 +80,7 @@ function google_get_user_name() {
  * Gibt Google-ID des Google-Benutzers zurück.
  * @return ID des Google-Benutzer oder null, falls niemand angemeldet ist.
  */
-function google_get_user_id() {
+function google_get_user_id() {    
     if (isset($_SESSION["GOOGLE_USER"])) {
         return $_SESSION["GOOGLE_USER"]['id'];
     }

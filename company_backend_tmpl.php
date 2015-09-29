@@ -2,7 +2,6 @@
 /**
  * Template Name: Company Backend
  * */
-session_start();
 require_once 'google_auth.php';
 
 // Ist der Benutzer angemeldet? Ansonsten Anmelden.
@@ -12,8 +11,7 @@ if (!google_is_signed_in()) {
 
 google_authenticate();
 
-function add_post($title, $type, $plz, $city, $street, $housenr, $telephone, $email, $website, $longitude, $latitude) {
-    echo "GEWERBE: " . $type;
+function add_post($title, $type, $plz, $city, $street, $housenr, $telephone, $email, $website, $longitude, $latitude, $google_id) {
     // neuen Post erzeugen
     $post_id = wp_insert_post(array(
         'post_type' => 'company',
@@ -30,6 +28,8 @@ function add_post($title, $type, $plz, $city, $street, $housenr, $telephone, $em
     add_post_meta($post_id, 'bd_website', $website);
     add_post_meta($post_id, 'bd_longitude', $longitude);
     add_post_meta($post_id, 'bd_latitude', $latitude);
+    add_post_meta($post_id, 'bd_google_id', $google_id);
+    add_post_meta($post_id, 'bd_last_login', time());
     // Tags (Gewerbe) hinzufügen
     wp_set_object_terms($post_id, explode(",", $type), 'type');
 }
@@ -46,11 +46,13 @@ if (isset($_POST['bd_company_title'])) {
     $website = $_POST['bd_website'];
     $longitude = $_POST['bd_longitude'];
     $latitude = $_POST['bd_latitude'];
-    add_post($title, $type, $plz, $city, $street, $housenr, $telephone, $email, $website, $longitude, $latitude);
+    $user_id = $_POST['bd_google_id'];
+    add_post($title, $type, $plz, $city, $street, $housenr, $telephone, $email, $website, $longitude, $latitude, $user_id);
 }
 ?>
 
 <?php get_header(); ?>
+
 <div class="container-fluid">
     <div class="row">
         <?php get_sidebar(); ?>        
@@ -148,6 +150,7 @@ if (isset($_POST['bd_company_title'])) {
                         <input type="text" class="form-control" id="inputLatitude" placeholder="Breitengrad" name="bd_latitude">
                     </div>
                 </div>
+                <input type='hidden' name='bd_google_id' value='<?php echo google_get_user_id() ?>'>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <button type="submit" class="btn btn-default">Firma eintragen</button>
