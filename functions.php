@@ -2,6 +2,10 @@
 
 define('WP_DEBUG', true);
 
+////////////////////////////////////////////////////////////////////////////////
+// POST TYPES
+////////////////////////////////////////////////////////////////////////////////
+
 function add_post_types() {
     register_post_type(
             'company', array(
@@ -31,6 +35,8 @@ function add_metaboxes() {
     add_meta_box('bd_housenr', 'Hausnummer', 'bd_housenr_html', 'company', 'normal', 'default');
     add_meta_box('bd_longitude', 'Längengrad', 'bd_longitude_html', 'company', 'normal', 'default');
     add_meta_box('bd_latitude', 'Breitengrad', 'bd_latitude_html', 'company', 'normal', 'default');
+    add_meta_box('bd_google_id', 'Google-ID', 'bd_google_id_html', 'company', 'normal', 'default');
+    add_meta_box('bd_last_login', 'Letzter Login', 'bd_last_login_html', 'company', 'normal', 'default');
 }
 
 function bd_save_meta($post_id, $post) {
@@ -50,6 +56,8 @@ function bd_save_meta($post_id, $post) {
     $events_meta['bd_website'] = $_POST['bd_website'];
     $events_meta['bd_longitude'] = $_POST['bd_longitude'];
     $events_meta['bd_latitude'] = $_POST['bd_latitude'];
+    $events_meta['bd_google_id'] = $_POST['bd_google_id'];
+    $events_meta['bd_last_login'] = $_POST['bd_last_login'];
 
     foreach ($events_meta as $key => $value) {
         if ($post->post_type == 'revision')
@@ -60,8 +68,9 @@ function bd_save_meta($post_id, $post) {
         } else {
             add_post_meta($post->ID, $key, $value);
         }
-        if (!$value)
+        if (!$value) {
             delete_post_meta($post->ID, $key);
+        }
     }
 }
 
@@ -108,6 +117,21 @@ function bd_website_html() {
     bd_input_html('bd_website');
 }
 
+function bd_google_id_html() {
+    bd_input_html('bd_google_id');
+}
+
+function bd_last_login_html() {
+    bd_input_html('bd_last_login');
+}
+
+add_action('init', 'add_post_types');
+add_action('save_post', 'bd_save_meta', 1, 2);
+
+////////////////////////////////////////////////////////////////////////////////
+// PAGES
+////////////////////////////////////////////////////////////////////////////////
+
 function add_page($new_page_title, $new_page_template) {
     $new_page_content = '';
     $page_check = get_page_by_title($new_page_title);
@@ -127,12 +151,9 @@ function add_page($new_page_title, $new_page_template) {
 }
 
 if (isset($_GET['activated']) && is_admin()) {
-    add_page('Unternehmer Login', 'company_login_tmpl.php');
     add_page('Unternehmer Backend', 'company_backend_tmpl.php');
     add_page('Firmen', 'companies_tmpl.php');
 }
-add_action('init', 'add_post_types');
-add_action('save_post', 'bd_save_meta', 1, 2);
 
 ////////////////////////////////////////////////////////////////////////////////
 // TAXONOMIES, TERMS
