@@ -3,17 +3,22 @@ require_once 'posts.php';
 ?>
 
 <?php get_header(); ?>
-<div class="container-fluid">
+<div class="container-fluid sidenav-container">  
     <div class="row">
         <?php get_sidebar(); ?>
-        <div class="col-md-10">
+
+        <div class="col-md-10 background map-container">
             <div id="googleMap" class="map-top"></div>
+        </div>
+
+        <div class="col-md-10 col-md-offset-2 background content">
+
             <h2><?php the_title() ?></h2>
             <div class='panel panel-default'>
                 <div class="panel-body">
                     <?php print_company_entry($post, false) ?>
                     <hr>
-                    <?php echo apply_filters('the_content', $post->post_content); ?>
+                    <?php echo get_post_content($post->ID) ?>
                 </div>                
             </div>
         </div>

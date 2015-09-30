@@ -26,7 +26,7 @@ function get_last_login_date() {
 }
 
 // Wird ein neues Unternehmen angelegt?
-if (isset($_POST['bd_company_title'])) {
+if (isset($_POST['create_new_entry'])) {
     $title = $_POST['bd_company_title'];
     $content = $_POST['bd_content'];
     $type = $_POST['tag_type'];
@@ -43,28 +43,120 @@ if (isset($_POST['bd_company_title'])) {
     add_post($title, $content, $type, $plz, $city, $street, $housenr, $telephone, $email, $website, $longitude, $latitude, $user_id);
 }
 
+// Wird ein bestehender Eintrag geändert?
+if (isset($_POST['update_entry'])) {
+    $content = $_POST['bd_content'];
+    $plz = $_POST['bd_plz'];
+    $city = $_POST['bd_city'];
+    $street = $_POST['bd_street'];
+    $housenr = $_POST['bd_housenr'];
+    $telephone = $_POST['bd_telephone'];
+    $email = $_POST['bd_email'];
+    $website = $_POST['bd_website'];
+    $longitude = $_POST['bd_longitude'];
+    $latitude = $_POST['bd_latitude'];
+    $user_id = $_POST['bd_google_id'];
+    update_post($content, $plz, $city, $street, $housenr, $telephone, $email, $website, $longitude, $latitude, $user_id);
+}
+
 $company_post = get_post_by_google_id(google_get_user_id());
 ?>
 
 <?php get_header(); ?>
 
-<div class="container-fluid">
+<div class="container-fluid sidenav-container">  
     <div class="row">
         <?php get_sidebar(); ?>        
-        <div class="col-md-10">
-            <h2>UNTERNEHMERBACKEND</h2>  
+        <div class="col-md-10 background content">
+            <h3>Willkommen, <?php echo google_get_user_name() ?>!</h3>
 
             <?php if (user_has_post()) { ?>
-                Hallo, <?php echo google_get_user_name() ?>!<br>
-                Sie waren zuletzt am <b><?php echo get_last_login_date() ?></b>
-                angemeldet.
-                Bitte bedenken Sie, dass nach 30 Tagen Abwesenheit ihr Eintrag nicht
-                mehr angezeigt wird!
-                <?php
-                update_last_login_time($company_post->ID);
-            } else {
-                ?>
+                <p>Sie waren zuletzt am <b><?php echo get_last_login_date() ?></b>
+                    angemeldet.
+                    Bitte bedenken Sie, dass nach 30 Tagen Abwesenheit ihr Eintrag nicht
+                    mehr angezeigt wird!</p>
+                <?php update_last_login_time($company_post->ID); ?>
+                <p>
+                    Falls Sie Änderungen an ihrem Eintrag vornehmen möchten,
+                    können Sie dies in folgendem Formular tun:
+                </p>
+                <form action="<?php the_permalink(); ?>" method="post" class="form-horizontal">                                    
+                    <div class="form-group">
+                        <label for="inputContent" class="col-sm-2 control-label">Beschreibung</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="inputContent" rows="5" name="bd_content">
+                                <?php echo strip_tags(get_post_content($company_post->ID)) ?>
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPLZ" class="col-sm-2 control-label">PLZ</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputPLZ" placeholder="PLZ" name="bd_plz" value="<?php echo get_post_plz($company_post->ID) ?>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputCity" class="col-sm-2 control-label">Ort</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputCity" placeholder="Ort" name="bd_city" value="<?php echo get_post_city($company_post->ID) ?>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputStreet" class="col-sm-2 control-label">Straße</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputStreet" placeholder="Straße" name="bd_street" value="<?php echo get_post_street($company_post->ID) ?>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputHouseNr" class="col-sm-2 control-label">Hausnummer</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputHouseNr" placeholder="Hausnummer" name="bd_housenr" value="<?php echo get_post_housenr($company_post->ID) ?>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputTelephone" class="col-sm-2 control-label">Telefonnummer</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputTelephone" placeholder="Telefonnummer" name="bd_telephone" value="<?php echo get_post_telephone($company_post->ID) ?>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEMail" class="col-sm-2 control-label">EMail</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputEMail" placeholder="EMail-Adresse" name="bd_email" value="<?php echo get_post_email($company_post->ID) ?>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputWebsite" class="col-sm-2 control-label">Web-Seite</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputWebsite" placeholder="Web-Seite" name="bd_website" value="<?php echo get_post_website($company_post->ID) ?>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputLongitude" class="col-sm-2 control-label">Längengrad</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputLongitude" placeholder="Längengrad" name="bd_longitude" value="<?php echo get_post_longitude($company_post->ID) ?>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputLatitude" class="col-sm-2 control-label">Breitengrad</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputLatitude" placeholder="Breitengrad" name="bd_latitude" value="<?php echo get_post_latitude($company_post->ID) ?>">
+                        </div>
+                    </div>
+                    <input type='hidden' name='bd_google_id' value='<?php echo google_get_user_id() ?>'>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default" name="update_entry">Eintrag ändern</button>
+                        </div>
+                    </div>
+                </form>
 
+
+            <?php } else { ?>
+                <p>                    
+                    Sie haben noch keinen Eintrag angelegt. Legen Sie bitte einen Eintrag für ihr Unternehmen an:
+                </p>
+                <br>
                 <form action="<?php the_permalink(); ?>" method="post" class="form-horizontal">                
 
                     <!-- Gewerbe -->
@@ -165,7 +257,7 @@ $company_post = get_post_by_google_id(google_get_user_id());
                     <input type='hidden' name='bd_google_id' value='<?php echo google_get_user_id() ?>'>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-default">Firma eintragen</button>
+                            <button type="submit" class="btn btn-default" name="create_new_entry">Firma eintragen</button>
                         </div>
                     </div>
                 </form>

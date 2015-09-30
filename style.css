@@ -49,3 +49,7 @@ table.company-entry td{
 table.company-entry tr:first-child td {
     padding-bottom:10px;
 }
+
+body{
+    background-color: #004D40;    
+}
