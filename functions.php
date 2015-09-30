@@ -17,6 +17,7 @@ function add_post_types() {
         'show_ui' => true,
         'supports' => array(
             'title',
+            'editor',
             'post-thumbnails',
             'custom-fields'),
         'register_meta_box_cb' => 'add_metaboxes'
