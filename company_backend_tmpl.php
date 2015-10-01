@@ -179,13 +179,13 @@ $company_post = get_post_by_google_id(google_get_user_id());
                             <div class="form-group">
                                 <label for="inputLongitude" class="col-sm-2 control-label">Längengrad</label>
                                 <div class="col-sm-10">
-                                    <input type="number" class="form-control" id="inputLongitude" placeholder="Längengrad" name="bd_longitude" value="<?php echo get_post_longitude($company_post->ID) ?>">
+                                    <input type="text" class="form-control" id="inputLongitude" placeholder="Längengrad" name="bd_longitude" value="<?php echo get_post_longitude($company_post->ID) ?>">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="inputLatitude" class="col-sm-2 control-label">Breitengrad</label>
                                 <div class="col-sm-10">
-                                    <input type="number" class="form-control" id="inputLatitude" placeholder="Breitengrad" name="bd_latitude" value="<?php echo get_post_latitude($company_post->ID) ?>">
+                                    <input type="text" class="form-control" id="inputLatitude" placeholder="Breitengrad" name="bd_latitude" value="<?php echo get_post_latitude($company_post->ID) ?>">
                                 </div>
                             </div>
                             <input type='hidden' name='bd_google_id' value='<?php echo google_get_user_id() ?>'>
@@ -320,13 +320,13 @@ $company_post = get_post_by_google_id(google_get_user_id());
                     <div class="form-group">
                         <label for="inputLongitude" class="col-sm-2 control-label">Längengrad</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="inputLongitude" placeholder="Längengrad" name="bd_longitude">
+                            <input type="text" class="form-control" id="inputLongitude" placeholder="Längengrad" name="bd_longitude">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="inputLatitude" class="col-sm-2 control-label">Breitengrad</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="inputLatitude" placeholder="Breitengrad" name="bd_latitude">
+                            <input type="text" class="form-control" id="inputLatitude" placeholder="Breitengrad" name="bd_latitude">
                         </div>
                     </div>
                     <input type='hidden' name='bd_google_id' value='<?php echo google_get_user_id() ?>'>

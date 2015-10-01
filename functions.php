@@ -177,7 +177,7 @@ function bd_last_login_html() {
     bd_input_html('bd_last_login');
 }
 
-add_action('admin_init', 'add_post_types');
+add_action('init', 'add_post_types');
 add_action('save_post', 'bd_save_meta', 1, 2);
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -215,7 +215,7 @@ function add_pages() {
     add_page('Suche', 'companies_tmpl.php');
 }
 
-add_action('admin_init', 'add_pages');
+add_action('init', 'add_pages');
 
 ////////////////////////////////////////////////////////////////////////////////
 // TAXONOMIES, TERMS
