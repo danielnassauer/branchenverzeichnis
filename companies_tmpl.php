@@ -6,8 +6,8 @@ require_once 'geo.php';
 require_once 'posts.php';
 
 /**
- * 
- * @return type
+ * Berechnet die Distanz in km für den aktuellen Eintrag.
+ * @return float Distanz in km
  */
 function get_distance() {
     global $post;

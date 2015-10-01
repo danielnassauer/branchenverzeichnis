@@ -44,6 +44,10 @@ function update_post($content, $plz, $city, $street, $housenr, $telephone, $emai
     ));
 }
 
+function delete_post($post_id) {
+    wp_delete_post($post_id, true);
+}
+
 function get_post_plz($post_id) {
     return get_post_meta($post_id, 'bd_plz', FALSE)[0];
 }
