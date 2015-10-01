@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Berechnet die Distanz zwischen zwei Koordinaten in km.
+ * @param float $lat1 Breitengrad der ersten Koordinate
+ * @param float $lng1 Längengrad der ersten Koordinate
+ * @param float $lat2 Breitengrad der zweiten Koordinate
+ * @param float $lng2 Längengrad der zweiten Koordinate
+ * @return float Entfernung in km.
+ */
 function get_geo_distance($lat1, $lng1, $lat2, $lng2) {
     $pi80 = M_PI / 180;
     $lat1 *= $pi80;

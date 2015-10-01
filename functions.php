@@ -6,6 +6,10 @@ define('WP_DEBUG', true);
 // POST TYPES
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Fügt den Custom Post Type "company" hinzu, der einem Unternehmens-Eintrag 
+ * entspricht.
+ */
 function add_post_types() {
     register_post_type(
             'company', array(
@@ -25,6 +29,9 @@ function add_post_types() {
     );
 }
 
+/**
+ * Fügt dem Custom Post Type "company" alle Parameter als Custom Fields hinzu.
+ */
 function add_metaboxes() {
     add_meta_box('bd_plz', 'PLZ', 'bd_plz_html', 'company', 'normal', 'default');
     add_meta_box('bd_city', 'Ort', 'bd_city_html', 'company', 'normal', 'default');
@@ -40,6 +47,13 @@ function add_metaboxes() {
     add_meta_box('bd_last_login', 'Letzter Login', 'bd_last_login_html', 'company', 'normal', 'default');
 }
 
+/**
+ * Wird aufgerufen, wenn ein Post gespeichert wird (im Back-End). Speichert die 
+ * Custom Fields zu jedem Post.
+ * @param int $post_id ID des Posts
+ * @param Post $post der Post
+ * @return int Post-ID
+ */
 function bd_save_meta($post_id, $post) {
     if (!wp_verify_nonce($_POST['eventmeta_noncename'], plugin_basename(__FILE__))) {
         return $post->ID;
@@ -75,6 +89,10 @@ function bd_save_meta($post_id, $post) {
     }
 }
 
+/**
+ * Gibt ein Text-Feld zur Eingabe von Werten für Custom-Fields im Back-End aus.
+ * @param type $id ID des Custom Fields
+ */
 function bd_input_html($id) {
     global $post;
     echo '<input type="hidden" name="eventmeta_noncename" id="eventmeta_noncename" value="' . wp_create_nonce(plugin_basename(__FILE__)) . '" />';
@@ -82,57 +100,95 @@ function bd_input_html($id) {
     echo '<input type="text" name="' . $id . '" value="' . $data . '" class="widefat" />';
 }
 
+/**
+ * Gibt ein Textfeld zur Eingabe der PLZ im Back-End aus.
+ */
 function bd_plz_html() {
     bd_input_html('bd_plz');
 }
 
+/**
+ * Gibt ein Textfeld zur Eingabe der Stadt im Back-End aus.
+ */
 function bd_city_html() {
     bd_input_html('bd_city');
 }
 
+/**
+ * Gibt ein Textfeld zur Eingabe der Straße im Back-End aus.
+ */
 function bd_street_html() {
     bd_input_html('bd_street');
 }
 
+/**
+ * Gibt ein Textfeld zur Eingabe der Haus-Nr. im Back-End aus.
+ */
 function bd_housenr_html() {
     bd_input_html('bd_housenr');
 }
 
+/**
+ * Gibt ein Textfeld zur Eingabe des Längengrades im Back-End aus.
+ */
 function bd_longitude_html() {
     bd_input_html('bd_longitude');
 }
 
+/**
+ * Gibt ein Textfeld zur Eingabe des Breitengrades im Back-End aus.
+ */
 function bd_latitude_html() {
     bd_input_html('bd_latitude');
 }
 
+/**
+ * Gibt ein Textfeld zur Eingabe der Telefon-Nr. im Back-End aus.
+ */
 function bd_telephone_html() {
     bd_input_html('bd_telephone');
 }
 
+/**
+ * Gibt ein Textfeld zur Eingabe der EMail-Adresse im Back-End aus.
+ */
 function bd_email_html() {
     bd_input_html('bd_email');
 }
 
+/**
+ * Gibt ein Textfeld zur Eingabe der URL der Webseite im Back-End aus.
+ */
 function bd_website_html() {
     bd_input_html('bd_website');
 }
 
+/**
+ * Gibt ein Textfeld zur Eingabe der Google-ID im Back-End aus.
+ */
 function bd_google_id_html() {
     bd_input_html('bd_google_id');
 }
 
+/**
+ * Gibt ein Textfeld zur Eingabe der Zeit des letzten Logins im Back-End aus.
+ */
 function bd_last_login_html() {
     bd_input_html('bd_last_login');
 }
 
-add_action('init', 'add_post_types');
+add_action('admin_init', 'add_post_types');
 add_action('save_post', 'bd_save_meta', 1, 2);
 
 ////////////////////////////////////////////////////////////////////////////////
 // PAGES
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Erzeugt eine neue Seite, falls sie noch nicht existiert.
+ * @param string $new_page_title Titel der neuen Seite.
+ * @param string $new_page_template Template-Datei der neuen Seite.
+ */
 function add_page($new_page_title, $new_page_template) {
     $new_page_content = '';
     $page_check = get_page_by_title($new_page_title);
@@ -151,15 +207,23 @@ function add_page($new_page_title, $new_page_template) {
     }
 }
 
-if (isset($_GET['activated']) && is_admin()) {
-    add_page('Unternehmer Backend', 'company_backend_tmpl.php');
-    add_page('Firmen', 'companies_tmpl.php');
+/**
+ * Fügt die Seiten "Unternehmer Login" und "Suche" ein.
+ */
+function add_pages() {
+    add_page('Unternehmer Login', 'company_backend_tmpl.php');
+    add_page('Suche', 'companies_tmpl.php');
 }
+
+add_action('admin_init', 'add_pages');
 
 ////////////////////////////////////////////////////////////////////////////////
 // TAXONOMIES, TERMS
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Fügt die Gewerbe-Taxonomy hinzu.
+ */
 function create_taxonomies() {
     $types = array('Arzt', 'Friseur', 'Restaurant', 'Supermarkt');
 
@@ -175,6 +239,5 @@ function create_taxonomies() {
 add_action('init', 'create_taxonomies');
 
 ////////////////////////////////////////////////////////////////////////////////
-//TODO nur zum testen
 flush_rewrite_rules();
 ?>

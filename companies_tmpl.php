@@ -20,6 +20,10 @@ function get_distance() {
 ?>
 
 <?php get_header(); ?>
+<script type="text/javascript">
+    var coordinates = [];
+</script>
+
 <div class="container-fluid sidenav-container">    
     <div class="row">
         <?php get_sidebar(); ?>      
@@ -58,7 +62,7 @@ function get_distance() {
                     <div class="form-group">
                         <label for="radius" class="col-sm-2 control-label">Umkreis</label>
                         <div class="col-sm-10">                                
-                            <input type="text" class="form-control" id="radius" name="radius">
+                            <input type="number" class="form-control" id="radius" name="radius" placeholder="geben Sie den Umkreis in km ein">
                         </div>                            
                     </div>                    
                     <div class="form-group">
@@ -98,12 +102,16 @@ function get_distance() {
                             $radius = floatval($_POST["radius"]);
                             if ($dist <= $radius) {
                                 print_company_entry($post, true, $dist);
+                                $lat = get_post_latitude($post->ID);
+                                $lng = get_post_longitude($post->ID);
+                                echo '<script type="text/javascript">coordinates.push({lat: ' . $lat . ', lng: ' . $lng . ', company: "' . get_the_title() . '"})</script>';
                                 echo "<hr>";
                             }
-                        } else {
-                            print_company_entry($post, true);
-                            echo "<hr>";
-                        }
+                        } 
+//                        else {
+//                            print_company_entry($post, true);
+//                            echo "<hr>";
+//                        }
                     }
                     ?>
                     <?php
@@ -120,18 +128,27 @@ function get_distance() {
 
 
 <script type="text/javascript">
+    /**
+     * Callback-Funktion. Wird von Google aufgerufen und Initialisiert die Karte.
+     */
     function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 8,
-            center: {lat: -34.397, lng: 150.644}
+            zoom: 12,
+            center: {lat: 50.0, lng: 8.0}
         });
+
         var geocoder = new google.maps.Geocoder();
 
         document.getElementById('submit').addEventListener('click', function () {
             geocodeAddress(geocoder, map);
         });
+
+        addMarkers(map);
     }
 
+    /**
+     * Löst eine in der Suche eingegebene Adresse zu Koordinaten auf.
+     */
     function geocodeAddress(geocoder, resultsMap) {
         var address = document.getElementById('address').value;
         geocoder.geocode({'address': address}, function (results, status) {
@@ -147,6 +164,32 @@ function get_distance() {
                 alert('Geocode was not successful for the following reason: ' + status);
             }
         });
+    }
+
+    /**
+     * Fügt Marker für alle Ergebnisse in der Karte ein. Klickt man auf einen Marker
+     * wird eine Infobox angezeigt.
+     */
+    function addMarkers(map) {
+        for (var i in coordinates) {
+            var coordinate = coordinates[i];
+
+            var marker = new google.maps.Marker({
+                position: {lat: coordinate.lat, lng: coordinate.lng},
+            });
+
+            marker.setMap(map);
+
+            map.setCenter({lat: coordinate.lat, lng: coordinate.lng});
+
+            var infowindow = new google.maps.InfoWindow({
+                content: coordinate.company
+            });
+
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.open(map, marker);
+            });
+        }
     }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLgez1M-ZaVnXYnl1gJtx_EQFWiK-gZT0&signed_in=true&callback=initMap"
