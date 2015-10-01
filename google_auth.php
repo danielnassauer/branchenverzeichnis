@@ -3,7 +3,7 @@ session_start();
 
 define('GOOGLE_CLIENT_ID', '1042880545551-5qeha6pmrq4r72a48p5f7r0bsqqdm1o5.apps.googleusercontent.com');
 define('GOOGLE_CLIENT_SECRET', 'rz8u-mFkRkeBTOzOC4ZqqC2N');
-define('GOOGLE_REDIRECT_URI', 'http://localhost/daniel/wordpress/index.php/unternehmer-backend/');
+define('GOOGLE_REDIRECT_URI', 'http://localhost/daniel/wordpress/index.php/unternehmer-login/');
 
 /**
  * Führt eine Weiterleitung zum Google Authentifizierungsdienst durch.
